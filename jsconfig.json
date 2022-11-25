@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "Classic",
+        "target": "ESNext",
+        "lib": ["DOM", "ESNext"],
+        "strict": true,
+        "checkJs": true
+    },
+    "include": [
+        "cmd/**/*",
+        "platform/**/*",
+    ],
+    "exclude": [
+        "vendor/**/*",
+        "temp/**/*",
+    ]
+}
