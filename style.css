@@ -1,0 +1,41 @@
+@import url('./styles/var-colors.css');
+@import url('./styles/var-spacing.css');
+@import url('./styles/common.css');
+
+.notice {
+  margin: var(--spacing-02) 0;
+  padding: var(--spacing-04) var(--spacing-08);
+  background-color: var(--color-grey-100);
+  border: 2px solid var(--color-grey-300);
+  border-radius: 4px;
+}
+
+.notice.blue {
+  background-color: var(--color-blue-50);
+  border-color: var(--color-blue-300);
+}
+
+.notice.yellow {
+  background-color: var(--color-amber-50);
+  border-color: var(--color-amber-300);
+}
+
+.field input, .field label {
+  display: block;
+  margin: var(--spacing-02) 0;
+}
+
+.field label {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+.field label *:last-child {
+  margin-left: var(--spacing-02);
+}
+
+footer {
+  min-height: 100px;
+}

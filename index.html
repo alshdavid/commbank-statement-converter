@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7K36CQN4RZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-7K36CQN4RZ');
+    </script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon"type="image/x-icon" href="data:image/x-icon;,">
+    <link rel="stylesheet" href="style.css">
+    <script src="cmd/main.mjs" type="module" defer async></script>
+    <title>Commbank Statement Converter</title>
+</head>
+<body>
+  <header class="content-max-width">
+    <h1>Commbank Statement Converter (PDF to CSV)</h1>
+    <p>This site takes PDF transaction statements from the Commonwealth Bank of Australia and converts them to usable formats like CSV and JSON</p>
+    <p>In addition, it offers post processing features like extracting out the purchase date on credit/debit card purchases and blending multiple statements together</p>
+    <p>I was only able to design it using my own bank statements, I assume Commbank have a consistent statement format but if not please raise an issue <a target="_blank" href="https://github.com/alshdavid/commbank-statement-converter/issues">here</a></p>
+    <p>If you have questions, encounter bugs or want to request features, you can raise them here: <a target="_blank" href="https://github.com/alshdavid/commbank-statement-converter/issues">https://github.com/alshdavid/Commbank-statement-converter/issues</a></p>
+    <div class="notice yellow">
+      <p><strong>Notes on Security</strong></p>
+      <p>Given the sensitivity of the information in bank statements, this website takes the following precautions to ensure there is as little risk as possible to you</p>
+      <ul>
+        <li><p>The website processes <i>everything</i> within the browser, so your data never leaves your device</p></li>
+        <li><p>The website is entirely self contained and loads no external dependencies</p></li>
+        <li><p>This website is fully open source allowing for security audits and contributions. View the code here <a target="_blank" href="https://github.com/alshdavid/commbank-statement-converter">https://github.com/alshdavid/Commbank-statement-converter</a></p></li>
+      </ul>
+    </div>
+    <div class="notice blue">
+      <p><strong>Notes on Support</strong></p>
+      <p>This project is completely free to use and I will not charge for it.</p> 
+      <p>I spent a few weekends making this project, something like 40 hours. If you found it useful, please consider buying me a coffee :)</p> 
+      <p>My PayID is alshdavid@gmail.com</p>
+      <p>My Website is <a target="_blank" href="https://davidalsh.com">https://davidalsh.com</a> (open to contracting)</p>
+    </div>
+  </header>
+  <main class="content-max-width">
+    <h1>Converter</h1>
+    <div class="field">
+      <label for="file-picker">Select your files</label>
+      <input name="file-picker" id="file-picker" type="file" multiple="true" accept="*.pdf" placeholder="Select your files">
+    </div>
+    <h2>Selected Files</h2>
+    <div class="selected-files">
+      <ul>
+        <li><p class="none">None Selected</p></li>
+      </ul>
+    </div>
+    <h2>Options</h2>
+    <!-- <div class="field">
+      <label for="option-merge-statements">
+        <input type="checkbox" name="option-merge-statements" id="option-merge-statements">
+        <span>Merge all statements</span>
+      </label>
+    </div> -->
+    <div class="field">
+      <label for="option-separate-dates">
+        <input type="checkbox" name="option-separate-dates" id="option-separate-dates">
+        <span>Separate authorization and settlement dates</span>
+      </label>
+    </div>
+    <div class="field">
+      <label for="option-timezone-dates">
+        <input type="checkbox" name="option-timezone-dates" id="option-timezone-dates">
+        <span>Include time zone in dates</span>
+      </label>
+    </div>
+    <div class="field">
+      <label for="option-exclude-account-balance">
+        <input type="checkbox" name="option-exclude-account-balance" id="option-exclude-account-balance">
+        <span>Exclude account balance column</span>
+      </label>
+    </div>
+    <div class="field">
+      <label for="option-output-format">
+        <select name="option-output-format" id="option-output-format">
+          <option>CSV</option>
+          <option>JSON</option>
+        </select>
+        <span>Output Format</span>
+      </label>
+    </div>
+    <h2>Process</h2>
+    <p>This is processed on your computer, can be slow depending on your hardware</p>
+    <button id="do-process">Convert</button>
+    <button id="reset">Restart</button>
+  </main>
+  <footer></footer>
+</body>
+</html>
