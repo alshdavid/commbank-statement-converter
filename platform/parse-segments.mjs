@@ -53,7 +53,6 @@ class Record {
  */
  export function parseSegments(segments) {
     const transactionsRows = extractTransactionRows(segments)
-
     /** @type {Array<Record>} */
     const transactions = []
 
@@ -64,17 +63,15 @@ class Record {
         throw new Error('Unable to find start and end of statement')
     }
 
-    const openingBalanceDate = openingBalanceRow[0].split(' ').slice(0,3)
+    const openingBalanceDate = parseOpeningRow(openingBalanceRow)[0].split(' ').slice(0,3)
     const closingBalanceDate = closingBalanceRow[0].split(' ').slice(0,3)
     const year = openingBalanceDate[2]
 
     for (const row of transactionsRows) {
         const record = new Record()
 
-
         const [ [day, month], description_raw ] = getDateFromDescription(row.slice(0, -5).join(' '))
         record.description_raw = description_raw
-
         record.date_of_settlement = makeDateString(day, month, year)
         if (
           description_raw[description_raw.length - 4] === 'Value' &&
@@ -128,7 +125,6 @@ export function extractTransactionRows(segments) {
 
     for (let i = 1; i < segments.length; i++) {
         const seg = segments[i]
-
         if (
             seg === Symbols.Date && 
             segments[i + 2] === Symbols.Transaction &&
@@ -164,13 +160,13 @@ export function extractTransactionRows(segments) {
 
         recordBuffer.push(seg)
 
-        if (seg.endsWith('CR') || seg.endsWith('DR')) {
+        // Minimum length 3 to avoid ending on descriptions that end in CR or DR
+        if (seg.endsWith('CR') || seg.endsWith('DR') && recordBuffer.length > 3) {
             records.push(recordBuffer)
             recordBuffer = []
             continue
         }
     }
-    
     return records
 }
 
@@ -219,4 +215,26 @@ function stringToMoney(moneyStringWithCrDb) {
         // @ts-expect-error
         return [parseInt(dollars_str, 10), parseInt(cents_str, 10)]
     }
+}
+
+/**
+ * Parse opening rows that contain a non-standard number of segments
+ * @param {string[]} row
+ * @returns {string[]}
+ * @throws {Error} For row lengths that don't match known options
+ */
+function parseOpeningRow(row) {
+    if (row.length === 3) {
+        // ['01 Aug 2016 OPENING BALANCE', '', '$1234.00 CR']
+        return row
+    }
+    if (row.length === 5) {
+        // ['01 Jul', '', '2016 OPENING BALANCE', '', '$1234.00 CR']
+        return [`${row[0]} ${row[2]}`, '', row[4]]
+    }
+    if (row.length === 7) {
+        // ['01 Jul', '', '2017 OPENING BALANCE', '', '$1234.00', '', 'CR']
+        return [`${row[0]} ${row[2]}`, '', `${row[4]} ${row[6]}`]
+    }
+    throw new Error(`Unhandled formatting for opening balance date, array length: ${row.length}, array: ${row}`)
 }
