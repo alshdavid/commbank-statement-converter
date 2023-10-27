@@ -1,0 +1,22 @@
+name: Build
+
+on: 
+  push:
+    branches: ['!main']
+  pull_request:
+    branches: ['*']
+
+concurrency:
+  group: "pull-request"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build Site
+        run: |
+          npm install
+          npm run build
