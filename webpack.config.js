@@ -33,8 +33,8 @@ if (fs.existsSync(Paths.Output)) {
 
 fs.mkdirSync(Paths.Output)
 
-fs.cpSync(path.join(__dirname, './node_modules/pdfjs-dist/build/pdf.worker.min.js'), path.join(Paths.Output, 'vendor', 'pdfjs.worker.min.js'), { recursive: true })
-fs.cpSync(path.join(__dirname, './node_modules/pdfjs-dist/build/pdf.min.js'), path.join(Paths.Output, 'vendor', 'pdfjs.min.js'), { recursive: true })
+fs.cpSync(path.join(__dirname, './node_modules/pdfjs-dist/build/pdf.worker.min.js'), path.join(Paths.Output, 'pdfjs.worker.min.js'), { recursive: true })
+fs.cpSync(path.join(__dirname, './node_modules/pdfjs-dist/build/pdf.min.js'), path.join(Paths.Output, 'pdfjs.min.js'), { recursive: true })
 
 const config = {
   mode,
