@@ -1,4 +1,4 @@
-import { getPdfJsLib } from '../platform/pdfjs'
+import { getPdfJsLib } from '../../vendor/pdfjs'
 
 export type Segments = Array<string>
 

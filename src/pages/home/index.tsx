@@ -5,8 +5,8 @@ import { Checkbox } from "../../components/form-checkbox";
 import { Button } from "../../components/form-button";
 import { Select, Option } from "../../components/form-select";
 import { FilePicker } from "../../components/form-file-picker";
-import { convertStatements } from '../../platform/convert';
-import { downloadFile } from '../../platform/download-file';
+import { convertStatements } from '../../platform/commonwealth-bank';
+import { downloadFile } from '../../platform/browser';
 
 type FormData = {
   'bank-statement-files': File[]

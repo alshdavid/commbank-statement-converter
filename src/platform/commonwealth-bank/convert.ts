@@ -1,5 +1,4 @@
-import { extractPdfSegments } from "./extract-pdf-segments"
-import { getBytesFromFile } from "./get-bytes-from-file"
+import { extractPdfSegments, getBytesFromFile } from "../pdf"
 import { Statement, parseSegments } from "./parse-segments"
 import { Parser } from "@json2csv/plainjs";
 
@@ -62,8 +61,6 @@ export async function convertStatements(files: File[], options: ConvertOptions):
       output.push(raw)
     }
   }
-
-  console.log(output)
 
   if (options.outputFormat === 'csv') {
     const parser = new Parser({});

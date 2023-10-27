@@ -1,5 +1,5 @@
 import { MonthMap } from "./dates"
-import { PAGE_BREAK, Segments } from "./extract-pdf-segments"
+import { PAGE_BREAK, Segments } from "../pdf"
 
 export type Money = [number, number, 'CR' | 'DR' | null]
 
