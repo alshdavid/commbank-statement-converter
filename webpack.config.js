@@ -3,6 +3,7 @@ const fs = require('fs')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
+const { DefinePlugin } = require('webpack')
 
 const Args = {
   Production: 'production',
@@ -63,12 +64,15 @@ const config = {
     ]
   },
   plugins: [
+    new DefinePlugin({
+      BASE_HREF: process.env.BASE_HREF ?? ''
+    }),
     new HtmlWebpackPlugin({
       minify: false,
       filename: 'index.html',
       template: 'src/index.html',
       inject:'head',
-      BASE_HREF: process.env.BASE_HREF ?? '.'
+      BASE_HREF: process.env.BASE_HREF ?? ''
     }),
     {
       apply(compiler) {
