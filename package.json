@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@json2csv/plainjs": "^7.0.3",
-    "pdfjs-dist": "^3.11.174"
+    "pdfjs-dist": "^3.11.174",
+    "preact": "^10.18.1"
   }
 }

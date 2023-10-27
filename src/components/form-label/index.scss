@@ -1,0 +1,20 @@
+.form-label {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: start;
+  margin: 0 0 var(--spacing-04);
+
+  p {
+    margin: 0 0 0 var(--spacing-02);
+    user-select: none;
+    cursor: pointer;
+  }
+
+  input {
+    cursor: pointer;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}

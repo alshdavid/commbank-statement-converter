@@ -1,0 +1,32 @@
+.page-home {
+  h1 {
+    font-size: 30px;
+    margin-bottom: var(--spacing-10);
+  }
+
+  h2 {
+    font-size: 26px;
+    margin: 0 0 var(--spacing-06) 0;
+  }
+
+  h3 {
+    font-size: 22px;
+    margin: var(--spacing-06) 0;
+  }
+
+  .notice {
+    border-top: 1px solid var(--color-grey-300);
+    border-bottom: 1px solid var(--color-grey-300);
+    text-align: center;
+    margin: var(--spacing-10) 0;
+    padding: var(--spacing-06) 10%;
+  }
+
+  .submit {
+    padding-top: var(--spacing-04);
+
+    button {
+      margin-right: var(--spacing-02);
+    }
+  }
+}

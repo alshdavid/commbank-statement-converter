@@ -11,6 +11,9 @@ dependencies:
   pdfjs-dist:
     specifier: ^3.11.174
     version: 3.11.174
+  preact:
+    specifier: ^10.18.1
+    version: 10.18.1
 
 devDependencies:
   copy-webpack-plugin:
@@ -1722,6 +1725,10 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
     dev: true
+
+  /preact@10.18.1:
+    resolution: {integrity: sha512-mKUD7RRkQQM6s7Rkmi7IFkoEHjuFqRQUaXamO61E6Nn7vqF/bo7EZCmSyrUnp2UWHw0O7XjZ2eeXis+m7tf4lg==, tarball: https://packages.atlassian.com/api/npm/npm-remote/preact/-/preact-10.18.1.tgz}
+    dev: false
 
   /pretty-error@4.0.0:
     resolution: {integrity: sha512-AoJ5YMAcXKYxKhuJGdcvse+Voc6v1RgnsR3nWcYU7q4t6z0Q6T86sv5Zq8VIRbOWWFpvdGE83LtdSMNd+6Y0xw==, tarball: https://packages.atlassian.com/api/npm/npm-remote/pretty-error/-/pretty-error-4.0.0.tgz}

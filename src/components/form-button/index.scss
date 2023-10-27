@@ -1,0 +1,38 @@
+.form-button {
+  display: inline-block;
+  background-color: var(--color-grey-100);
+  border: 2px solid var(--color-grey-300);
+  border-radius: 4px;
+  padding: var(--spacing-02) var(--spacing-04);
+  transition: opacity 0.10s ease-in;
+  cursor: pointer;
+
+  &.grey {
+    background-color: var(--color-grey-100);
+    border: 2px solid var(--color-grey-300);
+  }
+
+  &.green {
+    background-color: var(--color-green-100);
+    border: 2px solid var(--color-green-300);
+  }
+
+  &.blue {
+    background-color: var(--color-blue-100);
+    border: 2px solid var(--color-blue-300);
+  }
+
+  &.red {
+    background-color: var(--color-red-100);
+    border: 2px solid var(--color-red-300);
+  }
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:active {
+    opacity: 0.5;
+    transition: opacity 0s ease-in;
+  }
+}

@@ -11,7 +11,7 @@ const Args = {
 }
 
 const Paths = {
-  Index: path.join(__dirname, 'src', 'index.ts'),
+  Index: path.join(__dirname, 'src', 'index.tsx'),
   Styles: path.join(__dirname, 'src', 'index.scss'),
   Output: path.join(__dirname, 'dist'),
 }
