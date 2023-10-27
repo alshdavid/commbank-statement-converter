@@ -1,4 +1,4 @@
-import { extractPdfSegments, getBytesFromFile } from "../pdf"
+import { fromFiles } from "../pdf"
 import { Statement, parseSegments } from "./parse-segments"
 import { Parser } from "@json2csv/plainjs";
 
@@ -19,19 +19,18 @@ type FormattedRecord = {
   balance?: string
 }
 
-export async function convertStatements(files: File[], options: ConvertOptions): Promise<string> {
-  const parsedFiles: Statement[] = []
+export async function convert(files: File[], options: ConvertOptions): Promise<string> {
+  const parsedFiles = await fromFiles(files)
+  const statements: Statement[] = []
 
-  for (const [i, file] of files.entries()) {
-    const bytes = await getBytesFromFile(file);
-    const segments = await extractPdfSegments(bytes);
-    const parsed = parseSegments(segments);
-    parsedFiles.push(parsed);
+  for (const [i, file] of parsedFiles.entries()) {
+    const parsed = parseSegments(file.flattenPages());
+    statements.push(parsed);
   }
 
   const output: FormattedRecord[] = []
 
-  for (const result of parsedFiles) {
+  for (const result of statements) {
     for (const record of result.transactions) {
       const raw: FormattedRecord = {
         date_of_authorization: record.date_of_authorization,

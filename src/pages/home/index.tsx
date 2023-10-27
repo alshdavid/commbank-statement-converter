@@ -5,7 +5,7 @@ import { Checkbox } from "../../components/form-checkbox";
 import { Button } from "../../components/form-button";
 import { Select, Option } from "../../components/form-select";
 import { FilePicker } from "../../components/form-file-picker";
-import { convertStatements } from '../../platform/commonwealth-bank';
+import * as Commbank from '../../platform/commonwealth-bank';
 import { downloadFile } from '../../platform/browser';
 
 type FormData = {
@@ -18,12 +18,14 @@ type FormData = {
 
 export function PageHome() {
   async function onSubmit(form: FormData) {
-    const result = await convertStatements(form['bank-statement-files'], {
+    const result = await Commbank.convert(form['bank-statement-files'], {
       excludeAccountBalance: form['exclude-account-balance'],
       includeTimeZoneInDates: form['include-timezone'],
       separateDates: form['separate-dates'],
       outputFormat: form['output-format'],
     })
+
+    console.log(result)
 
     downloadFile(`statements.${form['output-format']}`, result)
   }
@@ -43,12 +45,15 @@ export function PageHome() {
         If you have questions, encounter bugs or want to request 
         features, you can raise them using the <a target="_blank" href="https://github.com/alshdavid/commbank-statement-converter/issues">bug reporter</a>
       </p>
-      <p className="notice">
-        This project is completely open source and welcomes contributions.
-        You can find the source code <a target="_blank" href="https://github.com/alshdavid/commbank-statement-converter/issues">here</a>
-      </p>
+      <a className="notice" target="_blank" href="https://github.com/alshdavid/commbank-statement-converter/issues">
+        <p>
+          This project is completely open source and welcomes contributions. You can find the source code <u>here</u>
+        </p>
+      </a>
       <Form onSubmit={onSubmit}>
         <FilePicker
+          multiple={true}
+          accept="*.pdf"
           name="bank-statement-files" />
 
         <h3>Options</h3>

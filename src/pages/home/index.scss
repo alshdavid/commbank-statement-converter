@@ -15,11 +15,19 @@
   }
 
   .notice {
+    display: block;
     border-top: 1px solid var(--color-grey-300);
     border-bottom: 1px solid var(--color-grey-300);
     text-align: center;
     margin: var(--spacing-10) 0;
     padding: var(--spacing-06) 10%;
+    transition: background-color 0.15s ease-in-out;
+    text-decoration: none;
+
+    &:hover {
+      background-color: var(--color-grey-100);
+      cursor: pointer;
+    }
   }
 
   .submit {

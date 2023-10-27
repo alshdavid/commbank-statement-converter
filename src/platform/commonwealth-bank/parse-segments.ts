@@ -1,5 +1,5 @@
 import { MonthMap } from "./dates"
-import { PAGE_BREAK, Segments } from "../pdf"
+import { PAGE_BREAK } from "../pdf"
 
 export type Money = [number, number, 'CR' | 'DR' | null]
 
@@ -40,7 +40,7 @@ export class Record {
   }
 }
 
-export function parseSegments(segments: Segments): Statement {
+export function parseSegments(segments: string[]): Statement {
   const transactionsRows = extractTransactionRows(segments)
   const transactions: Array<Record> = []
 
@@ -100,7 +100,7 @@ export function parseSegments(segments: Segments): Statement {
   }
 }
 
-export function extractTransactionRows(segments: Segments): Array<Array<string>> {
+export function extractTransactionRows(segments: string[]): Array<Array<string>> {
   const records: Array<Array<string>> = []
   let recordBuffer = []
   let inTransactions = false
