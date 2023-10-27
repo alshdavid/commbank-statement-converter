@@ -68,6 +68,7 @@ const config = {
       filename: 'index.html',
       template: 'src/index.html',
       inject:'head',
+      BASE_HREF: process.env.BASE_HREF ?? '.'
     }),
     {
       apply(compiler) {

@@ -20,6 +20,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+      BASE_HREF: /commbank-statement-converter/
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
