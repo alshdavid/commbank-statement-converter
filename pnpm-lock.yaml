@@ -8,9 +8,6 @@ dependencies:
   '@json2csv/plainjs':
     specifier: ^7.0.3
     version: 7.0.3
-  json2csv:
-    specifier: 6.0.0-alpha.2
-    version: 6.0.0-alpha.2
   pdfjs-dist:
     specifier: ^3.11.174
     version: 3.11.174
@@ -152,10 +149,6 @@ packages:
 
   /@streamparser/json@0.0.17:
     resolution: {integrity: sha512-mW54K6CTVJVLwXRB6kSS1xGWPmtTuXAStWnlvtesmcySgtop+eFPWOywBFPpJO4UD173epYsPSP6HSW8kuqN8w==, tarball: https://packages.atlassian.com/api/npm/npm-remote/@streamparser/json/-/json-0.0.17.tgz}
-    dev: false
-
-  /@streamparser/json@0.0.6:
-    resolution: {integrity: sha512-vL9EVn/v+OhZ+Wcs6O4iKE9EUpwHUqHmCtNUMWjqp+6dr85+XPOSGTEsqYNq1Vn04uk9SWlOVmx9J48ggJVT2Q==, tarball: https://packages.atlassian.com/api/npm/npm-remote/@streamparser/json/-/json-0.0.6.tgz}
     dev: false
 
   /@types/eslint-scope@3.7.6:
@@ -626,11 +619,6 @@ packages:
   /commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==, tarball: https://packages.atlassian.com/api/npm/npm-remote/commander/-/commander-2.20.3.tgz}
     dev: true
-
-  /commander@6.2.1:
-    resolution: {integrity: sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==, tarball: https://packages.atlassian.com/api/npm/npm-remote/commander/-/commander-6.2.1.tgz}
-    engines: {node: '>= 6'}
-    dev: false
 
   /commander@8.3.0:
     resolution: {integrity: sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==, tarball: https://packages.atlassian.com/api/npm/npm-remote/commander/-/commander-8.3.0.tgz}
@@ -1310,16 +1298,6 @@ packages:
   /json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==, tarball: https://packages.atlassian.com/api/npm/npm-remote/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz}
     dev: true
-
-  /json2csv@6.0.0-alpha.2:
-    resolution: {integrity: sha512-nJ3oP6QxN8z69IT1HmrJdfVxhU1kLTBVgMfRnNZc37YEY+jZ4nU27rBGxT4vaqM/KUCavLRhntmTuBFqZLBUcA==, tarball: https://packages.atlassian.com/api/npm/npm-remote/json2csv/-/json2csv-6.0.0-alpha.2.tgz}
-    engines: {node: '>= 12', npm: '>= 6.13.0'}
-    hasBin: true
-    dependencies:
-      '@streamparser/json': 0.0.6
-      commander: 6.2.1
-      lodash.get: 4.4.2
-    dev: false
 
   /kind-of@6.0.3:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==, tarball: https://packages.atlassian.com/api/npm/npm-remote/kind-of/-/kind-of-6.0.3.tgz}
