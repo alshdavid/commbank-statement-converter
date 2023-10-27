@@ -13,9 +13,9 @@ export function getPdfJsLib(): Promise<typeof pdfjs> {
 
 export async function initPdfjs() {
   if (pdfjsLoaded) return
-  await createScript('/pdfjs.min.js')
-  await createScript('/pdfjs.worker.min.js')
-  windowRef.pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs.worker.min.js'
+  await createScript('/vendor/pdfjs.min.js')
+  await createScript('/vendor/pdfjs.worker.min.js')
+  windowRef.pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs.worker.min.js'
   pdfjsResolve(windowRef.pdfjsLib)
   pdfjsLoaded = true
 }
