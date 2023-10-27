@@ -65,7 +65,7 @@ const config = {
   },
   plugins: [
     new DefinePlugin({
-      BASE_HREF: process.env.BASE_HREF ?? ''
+      BASE_HREF: JSON.stringify(process.env.BASE_HREF ?? '')
     }),
     new HtmlWebpackPlugin({
       minify: false,
