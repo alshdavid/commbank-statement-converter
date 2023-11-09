@@ -12,9 +12,10 @@ export type SelectProps = h.JSX.HTMLAttributes<HTMLInputElement> & {
   onChange?: (files: Array<File>) => any
 }
 
-export function FilePicker({ name, ...props }: SelectProps) {
+export function FilePicker({ name, disabled, ...props }: SelectProps) {
   const form = useContext(formContext)
   const [ el, setEl ] = useState<null | HTMLInputElement>(null)
+  const [, forceUpdate] = useState(structuredClone({}))
 
   useEffect(() => {
     if (name in form.data) return
@@ -28,16 +29,21 @@ export function FilePicker({ name, ...props }: SelectProps) {
     // @ts-expect-error
     target.value = null
     form.set(name, captured)
+    forceUpdate(structuredClone({}))
     props.onChange?.(captured)
   }
 
   return (
-    <div className="form-file-picker form-label">
+    <div className="form-file-picker form-label" disabled={disabled}>
       <Button 
         color='grey'
-        onClick={() => el?.click()}>Choose Files</Button>
+        disabled={disabled}
+        onClick={() => el?.click()}
+      >Choose Files</Button>
+
       <input 
         {...props}
+        disabled={disabled}
         style={{ display: 'none' }}
         type="file"
         ref={setEl}

@@ -4,7 +4,7 @@ import { useContext } from 'preact/hooks'
 import { formContext } from '../form'
 
 export type ButtonProps = h.JSX.HTMLAttributes<HTMLButtonElement> & {
-  color?: 'red' | 'blue' | 'grey' | 'green'
+  color?: 'red' | 'blue' | 'grey' | 'green' | 'yellow'
 }
 
 export function Button({ type, className, color, ...props }: ButtonProps) {

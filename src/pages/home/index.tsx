@@ -1,5 +1,5 @@
 import './index.scss'
-import { h } from "preact";
+import { Fragment, h } from "preact";
 import { Form } from "../../components/form";
 import { Checkbox } from "../../components/form-checkbox";
 import { Button } from "../../components/form-button";
@@ -7,8 +7,10 @@ import { Select, Option } from "../../components/form-select";
 import { FilePicker } from "../../components/form-file-picker";
 import * as Commbank from '../../platform/commonwealth-bank';
 import { downloadFile } from '../../platform/browser';
+import { useState } from 'preact/hooks';
+import { formatError } from './format-error';
 
-type FormData = {
+export type FormData = {
   'bank-statement-files': File[]
   'separate-dates': boolean
   'include-timezone': boolean
@@ -17,17 +19,56 @@ type FormData = {
 }
 
 export function PageHome() {
+  const [isConverting, setIsConverting] = useState(false)
+  const [result, setResult] = useState<string | undefined>(undefined)
+  const [hasError, setHasError] = useState<boolean>(false)
+
   async function onSubmit(form: FormData) {
-    const result = await Commbank.convert(form['bank-statement-files'], {
-      excludeAccountBalance: form['exclude-account-balance'],
-      includeTimeZoneInDates: form['include-timezone'],
-      separateDates: form['separate-dates'],
-      outputFormat: form['output-format'],
-    })
+    if (form['bank-statement-files'].length === 0) {
+      console.log("No files selected")
+      return
+    }
+    setIsConverting(true)
+    reset()
 
-    console.log(result)
+    try {
+      const converted = await Commbank.convert(form['bank-statement-files'], {
+        excludeAccountBalance: form['exclude-account-balance'],
+        includeTimeZoneInDates: form['include-timezone'],
+        separateDates: form['separate-dates'],
+        outputFormat: form['output-format'],
+      })
 
-    downloadFile(`statements.${form['output-format']}`, result)
+      setIsConverting(false)
+      setResult(converted)
+    } catch (untypedError: any) {
+      setHasError(true)
+      setResult(formatError(untypedError, form))
+      setIsConverting(false)
+    }
+  }
+
+  function generateErrorReportLink(to: 'github' | 'email'): string {
+    if (!result) return ''
+    const msgTitle = encodeURIComponent(`Commbank Converter Bug`)
+    const msgBody = encodeURIComponent('PASTE ERROR OUTPUT HERE')
+    if (to === 'email') {
+      return `mailto:alshdavid@gmail.com?subject=${msgTitle}&body=${msgBody}`
+    }
+    if (to === 'github') {
+      return `https://github.com/alshdavid/commbank-statement-converter/issues/new?title=${msgTitle}&body=${msgBody}`
+    }
+    return ''
+  }
+
+  function download(outputFormat: 'csv' | 'json') {
+    if (!result) return
+    downloadFile(`statements.${outputFormat}`, result)
+  }
+
+  function reset() {
+    setHasError(false)
+    setResult(undefined)
   }
   
   return (
@@ -50,36 +91,74 @@ export function PageHome() {
           This project is completely open source and welcomes contributions. You can find the source code <u>here</u>
         </p>
       </a>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={onSubmit} disabled={isConverting}>{(form) => <Fragment>
         <FilePicker
           multiple={true}
           accept="*.pdf"
-          name="bank-statement-files" />
+          name="bank-statement-files" 
+          disabled={isConverting} />
 
         <h3>Options</h3>
 
         <Checkbox 
           name="separate-dates" 
-          label="Separate authorization and settlement dates"/>
+          label="Separate authorization and settlement dates"
+          disabled={isConverting} />
 
         <Checkbox 
-          name="include-timezone" 
-          label="Include time zone in dates"/>
+          name="include-timezone"
+          label="Include time zone in dates"
+          disabled={isConverting} />
 
         <Checkbox 
           name="exclude-account-balance" 
-          label="Exclude account balance column"/>
+          label="Exclude account balance column"
+          disabled={isConverting} />
 
-        <Select name="output-format" label="Output Format">
+        <Select 
+          name="output-format"
+          label="Output Format"
+          disabled={isConverting}>
           <Option value="csv">CSV</Option>
           <Option value="json">JSON</Option>
         </Select>
 
         <div className="submit">
-          <Button color="blue" type="submit">Convert</Button>
-          <Button color="red" type="reset">Reset</Button>
+          <Button 
+            color="blue" 
+            disabled={isConverting || form.get('bank-statement-files')?.length === 0} 
+            type="submit"
+            >Convert</Button>
+
+          <Button 
+            color="red" 
+            disabled={isConverting || !form.hasUpdated()} 
+            type="reset"
+            onClick={reset}
+            >Reset</Button>
+
+          {result && !hasError && 
+            <Button 
+              color="green" 
+              onClick={() => download(form.get('output-format'))}
+              >Download</Button>}
+          
+          {result && hasError && 
+            <a 
+              className="form-button yellow"
+              target="blank"
+              href={generateErrorReportLink('github')}
+              >Report Error via GitHub</a>}
+
+          {result && hasError && 
+            <a 
+              className="form-button yellow"
+              target="blank"
+              href={generateErrorReportLink('email')}
+              >Report Error via Email</a>}
         </div>
-      </Form>
+      </Fragment>}</Form>
+      {result && <div className="results-outlet"><div className="codeblock">{result}</div></div>}
     </main>
   )
 }

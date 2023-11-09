@@ -1,3 +1,4 @@
+import './index.scss'
 import { h } from 'preact'
 import { useContext, useEffect, useState } from 'preact/hooks'
 import { formContext } from '../form'
@@ -9,7 +10,7 @@ export type SelectProps = h.JSX.HTMLAttributes<HTMLSelectElement> & {
   children?: any
 }
 
-export function Select({ name, label, children, ...props }: SelectProps) {
+export function Select({ name, label, children, className, disabled, ...props }: SelectProps) {
   const form = useContext(formContext)
   const [ el, setEl ] = useState<null | HTMLSelectElement>(null)
 
@@ -24,11 +25,15 @@ export function Select({ name, label, children, ...props }: SelectProps) {
   }
 
   return (
-    <Label>
+    <Label className='form-select' disabled={disabled}>
       {label && <p>{label}</p>}
       <select
+        {...props}
+        className={`${typeof className === 'string' ? className : ''} form-select`}
         ref={setEl}
         onChange={onChange}
+        value={form.get(name)}
+        disabled={disabled}
       >{children}</select>
     </Label>
   )

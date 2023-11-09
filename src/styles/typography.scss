@@ -1,7 +1,7 @@
 * {
   padding: 0;
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-family-1);
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   box-sizing: border-box;
   text-rendering: optimizeLegibility;
@@ -28,10 +28,6 @@ hr {
   display: block;
   height: 1px;
   margin-bottom: var(--spacing-05);
-}
-
-h1,h2,h3,h4,h5,h6 {
-  font-family: var(--font-family-2);
 }
 
 h1 {
@@ -72,7 +68,6 @@ h6 {
 }
 
 p {
-  font-family: var(--font-family-1);
   font-size: 18px;
   line-height: 28px;
   margin-bottom: var(--spacing-05);
@@ -177,7 +172,7 @@ samp {
 code, .codeblock {
   -webkit-font-smoothing: initial;
   padding: 2px 8px;
-  font-family: var(--font-family-3);
+  font-family: var(--font-family-monospace);
   margin: 0 2px;
   border-radius: 2px;
   color: #292929;
@@ -185,17 +180,16 @@ code, .codeblock {
 }
 
 .codeblock {
+  white-space: pre;
   margin: 0 0 var(--margin-bottom-desktop) 0;
   display: block;
   border-radius: 4px;
   padding: 1.25em 1em;
-  font-family: var(--font-family-3);
+  font-family: var(--font-family-monospace);
   border-radius: 4px;
   -webkit-font-smoothing: initial;
   overflow-x: scroll;
   max-width: 100%;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
   font-size: 14px;
 
   * {
@@ -204,10 +198,6 @@ code, .codeblock {
 
   &.language-plaintext {
     padding: 0 0 0 12px;
-  }
-  
-  &::-webkit-scrollbar {
-    display: none;
   }
 }
 
@@ -229,7 +219,7 @@ pre {
     position: relative;
     padding: 0 0 0 44px;
     margin: 0;
-    font-family: var(--font-family-3);
+    font-family: var(--font-family-monospace);
     border-radius: 4px;
     line-height: 22px;
     display: block;

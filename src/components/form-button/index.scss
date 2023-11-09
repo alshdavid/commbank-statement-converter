@@ -6,6 +6,18 @@
   padding: var(--spacing-02) var(--spacing-04);
   transition: opacity 0.10s ease-in;
   cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: default;
+    transition: opacity 0s ease-in;
+
+    &:hover, &:active {
+      opacity: 0.5;
+    }
+  }
 
   &.grey {
     background-color: var(--color-grey-100);
@@ -25,6 +37,11 @@
   &.red {
     background-color: var(--color-red-100);
     border: 2px solid var(--color-red-300);
+  }
+
+  &.yellow {
+    background-color: var(--color-amber-100);
+    border: 2px solid var(--color-amber-300);
   }
 
   &:hover {

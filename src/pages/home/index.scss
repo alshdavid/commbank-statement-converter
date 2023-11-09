@@ -33,8 +33,21 @@
   .submit {
     padding-top: var(--spacing-04);
 
-    button {
+    button, a {
       margin-right: var(--spacing-02);
+    }
+  }
+
+  .form {
+    margin-bottom: var(--spacing-04);
+
+    &[disabled] {
+      pointer-events: none;
+      cursor: default;
+
+      h3 {
+        opacity: 0.5;
+      }
     }
   }
 }

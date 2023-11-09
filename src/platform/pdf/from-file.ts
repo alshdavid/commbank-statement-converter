@@ -31,9 +31,11 @@ export class PDFFile {
 
 export async function fromFile(file: File): Promise<PDFFile> {
   const bytes = await getBytesFromFile(file);
+  const pages = await process(bytes);
+  
   return Object.freeze(new PDFFile(
     file.name,
-    await process(bytes)
+    pages,
   ))
 }
 

@@ -1,3 +1,4 @@
+import './index.scss'
 import { h } from 'preact'
 import { useContext, useEffect, useState } from 'preact/hooks'
 import { formContext } from '../form'
@@ -9,7 +10,7 @@ export type CheckboxProps = h.JSX.HTMLAttributes<HTMLInputElement> & {
   children?: any
 }
 
-export function Checkbox({ name, label, children, ...props }: CheckboxProps) {
+export function Checkbox({ name, label, children, disabled, ...props }: CheckboxProps) {
   const form = useContext(formContext)
   const [ el, setEl ] = useState<null | HTMLInputElement>(null)
 
@@ -24,11 +25,12 @@ export function Checkbox({ name, label, children, ...props }: CheckboxProps) {
   }
 
   return (
-    <Label>
+    <Label className="form-checkbox" disabled={disabled}>
       {label && <p>{label}</p>}
       {children}
       <input 
         {...props} 
+        disabled={disabled}
         type="checkbox"
         checked={form.get(name)}
         ref={setEl}

@@ -1,0 +1,5 @@
+label.form-checkbox {
+    &[disabled] {
+        opacity: 0.5;
+    }
+}

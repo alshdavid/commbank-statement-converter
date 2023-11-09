@@ -1,6 +1,10 @@
 .form-file-picker {
   display: block;
 
+  &[disabled] {
+    opacity: 0.5;
+  }
+
   button {
     font-size: 16px;
   }

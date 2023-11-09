@@ -1,4 +1,4 @@
-import { fromFiles } from "../pdf"
+import { PDFFile, fromFiles } from "../pdf"
 import { Statement, parseSegments } from "./parse-segments"
 import { Parser } from "@json2csv/plainjs";
 
@@ -19,13 +19,28 @@ type FormattedRecord = {
   balance?: string
 }
 
+export class CommbankError extends Error {
+  pdfFiles: PDFFile[]
+
+  constructor(msg: string, stack: string| undefined, pdfFiles: PDFFile[]) {
+    super(msg)
+    this.pdfFiles = pdfFiles
+    this.stack = stack
+  }
+}
+
 export async function convert(files: File[], options: ConvertOptions): Promise<string> {
   const parsedFiles = await fromFiles(files)
   const statements: Statement[] = []
 
   for (const [i, file] of parsedFiles.entries()) {
-    const parsed = parseSegments(file.flattenPages());
-    statements.push(parsed);
+    try {
+      const parsed = parseSegments(file.flattenPages());
+      statements.push(parsed);
+    } catch (uError: any) {
+      const error = uError instanceof Error ? uError : new Error(uError);
+      throw new CommbankError(error.message, error.stack, parsedFiles)
+    }
   }
 
   const output: FormattedRecord[] = []
