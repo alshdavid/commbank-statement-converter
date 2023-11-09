@@ -42,7 +42,14 @@ export function formatError(
       '',
       `FILES:`,
       (form['bank-statement-files'] || []).map(file => `    ${file.name}  ${file.type}`),
+      '',
+      'OPTIONS',
     ]
+
+    for (const [k, v] of Object.entries(form)) {
+        if (k === 'bank-statement-files') continue
+        msg.push(`    ${k}: ${v}`)
+    }
 
     if (isNotError) {
       msg.push('')
