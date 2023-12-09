@@ -1,9 +1,9 @@
 import { h } from 'preact'
 import * as preact from 'preact'
-import { PageHome } from './pages/home'
+import { App } from './app'
 import { initPdfjs } from './vendor/pdfjs';
 
 void async function main() {
-    preact.render(<PageHome/>, document.getElementById('root')!)
+    preact.render(<App/>, document.getElementById('root')!)
     await initPdfjs()
 }()

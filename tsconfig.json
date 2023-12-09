@@ -6,6 +6,7 @@
         "lib": ["DOM", "ESNext"],
         "strict": true,
         "jsx": "react",
+        "experimentalDecorators": true,
         "jsxFactory": "h"
     },
     "include": [

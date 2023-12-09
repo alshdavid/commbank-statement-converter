@@ -1,4 +1,5 @@
 import { getBytesFromFile } from "../browser";
+import { Result } from "../shared";
 import { process } from "./process";
 
 export const PAGE_BREAK = '--__PAGE_BREAK__--'
@@ -47,4 +48,18 @@ export async function fromFiles(files: File[]): Promise<PDFFile[]> {
   }
 
   return pdfFiles
+}
+
+export async function parseFiles(files: File[]): Promise<Result<PDFFile[], Error>> {
+  try {
+    const pdfFiles: PDFFile[] = []
+
+    for (const [i, file] of files.entries()) {
+      pdfFiles.push(await fromFile(file))
+    }
+
+    return { value: pdfFiles }
+  } catch (error: any) {
+    return { error }
+  }
 }

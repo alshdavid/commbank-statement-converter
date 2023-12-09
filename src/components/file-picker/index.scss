@@ -1,0 +1,26 @@
+.form-file-picker {
+  display: block;
+
+  &[disabled] {
+    opacity: 0.5;
+  }
+
+  button {
+    font-size: 16px;
+  }
+
+  .selected-files {
+    margin-top: var(--spacing-03);
+    
+    p {
+      padding: var(--spacing-01) 0 0 var(--spacing-01);
+      border-bottom: 1px solid var(--color-grey-300);
+      margin: 0;
+
+      &:first-child {
+        margin-top: var(--spacing-03);
+        border-top: 1px solid var(--color-grey-300);
+      }
+    }
+  }
+}

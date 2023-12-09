@@ -68,14 +68,10 @@ h6 {
 }
 
 p {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 28px;
-  margin-bottom: var(--spacing-05);
+  margin-bottom: var(--spacing-01);
   letter-spacing: 0.3px;
-
-  @include mobile() {
-    font-size: 16px;
-  }
 }
 
 p:empty {
@@ -302,6 +298,7 @@ tbody tr {
   background-color: #fff;
 }
 
+select,
 input[type="text"], input[type="number"] {
   display: block;
   width: 100%;
@@ -315,6 +312,12 @@ input[type="text"], input[type="number"] {
   box-shadow: rgba(208, 215, 222, 0.2) 0px 1px 0px inset;
   -webkit-box-align: stretch;
   align-items: stretch;
+}
+
+select {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-04);
 }
 
 // Misc
