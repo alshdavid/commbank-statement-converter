@@ -4,4 +4,4 @@
 
 Just select your files and start the conversion
 
-![](docs/statement-converter.jpg)
+![](docs/screenshot_2023_12_11.jpg)
