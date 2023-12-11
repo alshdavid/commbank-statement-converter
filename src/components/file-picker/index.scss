@@ -1,7 +1,7 @@
 .form-file-picker {
   display: block;
 
-  &[disabled] {
+  &.disabled {
     opacity: 0.5;
   }
 

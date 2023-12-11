@@ -3,23 +3,24 @@ import { Component, h } from 'preact'
 import { Button } from '../button'
 import { makeReactive } from '../../platform/reactive'
 
-export type SelectProps = Omit<h.JSX.HTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> & {
+export type SelectProps = Omit<h.JSX.HTMLAttributes<HTMLInputElement>, 'onChange' | 'value' | 'disabled'> & {
   value?: File[]
   name: string
   multiple?: boolean
   accept?: string
   placeholder?: string
+  enabled?: boolean
   onChange?: (files: Array<File>) => any
 }
 
 export class FilePicker extends Component<SelectProps> {
-  disabled: boolean
+  enabled: boolean
   inputEl: HTMLInputElement | null
   files: File[]
 
   constructor(props: SelectProps){
     super(props)
-    this.disabled = props.disabled == true ? true : false
+    this.enabled = props.enabled ?? true
     this.files = []
     this.inputEl = null
 
@@ -35,22 +36,24 @@ export class FilePicker extends Component<SelectProps> {
   componentWillReceiveProps(nextProps: Readonly<SelectProps>): void {
     if (nextProps.value) {
       this.files = nextProps.value
-    }  
+    }
+    this.enabled = nextProps.enabled ?? true
   }
 
   render() {
       return (
-        <div className="form-file-picker form-label" disabled={this.disabled}>
+        <div className={`form-file-picker form-label ${!this.enabled ? 'disabled' : ''}`}>
           <Button 
             color='grey'
-            disabled={this.disabled}
+            enabled={this.enabled}
             onClick={() => this.inputEl?.click()}
           >Choose Files</Button>
     
           <input 
-            disabled={this.disabled}
+            disabled={!this.enabled}
             style={{ display: 'none' }}
             type="file"
+            multiple={this.props.multiple}
             ref={ref => this.inputEl = ref}
             onChange={event => this.onChange(event)}/>
     

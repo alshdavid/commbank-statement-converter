@@ -93,6 +93,7 @@ const config = {
     new CopyPlugin({
       patterns: [
         { from: 'src/robots.txt', to: '' },
+        { from: 'src/static', to: 'static' },
       ]
     }),
     new MiniCssExtractPlugin({ 

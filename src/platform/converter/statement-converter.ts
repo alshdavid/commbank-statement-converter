@@ -6,12 +6,13 @@ export interface IStatementConverter {
 }
 
 export type StatementRecord = {
-  bank_name: string
+  bank_swift_code: string
+  currency: string
   account_number: string
   date_of_purchase: string
   date_of_settlement: string
   description: string
   debit: string
   credit: string
-  balance?: string
+  balance: string
 }

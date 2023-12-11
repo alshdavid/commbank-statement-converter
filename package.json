@@ -25,6 +25,10 @@
   },
   "dependencies": {
     "@json2csv/plainjs": "^7.0.3",
+    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
     "pdfjs-dist": "^3.11.174",
     "preact": "^10.18.1"
   }

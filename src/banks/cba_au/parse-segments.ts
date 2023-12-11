@@ -1,5 +1,8 @@
 import { MonthMap } from "./dates"
-import { PAGE_BREAK } from "../pdf"
+import { PAGE_BREAK } from "../../platform/pdf"
+import { TIME_ZONE } from "./constants"
+import moment from 'moment-timezone'
+import * as moment_timezone from 'moment-timezone'
 
 export type Money = [number, number, 'CR' | 'DR' | null]
 
@@ -11,6 +14,8 @@ export type Statement = {
   transactions: Array<Record>
 }
 const Symbols = Object.freeze({
+  StatementPeriod: ['Statement', 'Period'],
+  AccountNumber: 'Account Number',
   Date: 'Date',
   Transaction: 'Transaction',
   Debit: 'Debit',
@@ -21,8 +26,9 @@ const Symbols = Object.freeze({
 })
 
 export class Record {
+  account_number: string
   date_of_settlement: string
-  date_of_authorization: string
+  date_of_purchase: string
   description_raw: string[]
   description: string
   debit: Money | null
@@ -30,8 +36,9 @@ export class Record {
   balance: Money
 
   constructor(record: Partial<Record> = {}) {
+    this.account_number = ''
     this.date_of_settlement = record.date_of_settlement ?? ''
-    this.date_of_authorization = record.date_of_authorization ?? ''
+    this.date_of_purchase = record.date_of_purchase ?? ''
     this.description_raw = record.description_raw ?? []
     this.description = record.description ?? ''
     this.debit = record.debit ?? null
@@ -41,6 +48,7 @@ export class Record {
 }
 
 export function parseSegments(segments: string[]): Statement {
+  const accountNumber = extractAccountNumber(segments)
   const transactionsRows = extractTransactionRows(segments)
   const transactions: Array<Record> = []
 
@@ -53,23 +61,39 @@ export function parseSegments(segments: string[]): Statement {
 
   const openingBalanceDate = parseOpeningRow(openingBalanceRow)[0].split(' ').slice(0, 3)
   const closingBalanceDate = closingBalanceRow[0].split(' ').slice(0, 3)
-  const year = openingBalanceDate[2]
+  let year = parseInt(openingBalanceDate[2], 10)
+
+  // Keep track of the month number to track if the statement rolls over to the next year
+  let month = getMonthNumber(openingBalanceDate[0], openingBalanceDate[1], openingBalanceDate[2])
 
   for (const row of transactionsRows) {
     const record = new Record()
 
-    const [[day, month], description_raw] = getDateFromDescription(row.slice(0, -5).join(' '))
+    record.account_number = accountNumber
+
+    const [[day, monthStr], description_raw] = getDateFromDescription(row.slice(0, -5).join(' '))
     record.description_raw = description_raw
-    record.date_of_settlement = makeDateString(day, month, year)
+
+    const currentMonth = getMonthNumber(day, monthStr, year)
+    if (currentMonth < month) {
+      year += 1
+    }
+    month = currentMonth
+
+    const recordDate =  makeDateString(day, monthStr, year)
+
     if (
       description_raw[description_raw.length - 4] === 'Value' &&
       description_raw[description_raw.length - 3] === 'Date:'
     ) {
+      // This is a CC payment so get the settlement date from the description
+      record.date_of_settlement = recordDate
       const [d, m, y] = description_raw[description_raw.length - 2].split('/')
-      record.date_of_authorization = makeDateString(d, m, y)
+      record.date_of_purchase = makeDateString(d, m, y)
       record.description = description_raw.slice(0, -4).join(' ')
     } else {
-      record.date_of_authorization = record.date_of_settlement
+      // No settlement date / Not a CC payment
+      record.date_of_purchase = recordDate
       record.description = description_raw.join(' ')
     }
 
@@ -91,6 +115,9 @@ export function parseSegments(segments: string[]): Statement {
 
   }
 
+  // Sort by purchase date
+  transactions.sort((a, b) => moment(a.date_of_purchase).unix() - moment(b.date_of_purchase).unix())
+
   return {
     openingDate: makeDateString(openingBalanceDate[0], openingBalanceDate[1], openingBalanceDate[2]),
     closingDate: makeDateString(closingBalanceDate[0], closingBalanceDate[1], closingBalanceDate[2]),
@@ -100,7 +127,17 @@ export function parseSegments(segments: string[]): Statement {
   }
 }
 
-export function extractTransactionRows(segments: string[]): Array<Array<string>> {
+function extractAccountNumber(segments: string[]): string {
+  for (let i = 1; i < segments.length; i++) {
+    const segment = segments[i]
+    if (segment === Symbols.AccountNumber) {
+      return segments[i+2]
+    }
+  }
+  throw new Error('Unable to find account number')
+}
+
+function extractTransactionRows(segments: string[]): Array<Array<string>> {
   const records: Array<Array<string>> = []
   let recordBuffer = []
   let inTransactions = false
@@ -157,8 +194,17 @@ function getDateFromDescription(description: string): [[string, string], string[
   return [[day, month], rest]
 }
 
-function makeDateString(day: string, monthName: string, year: string): string {
-  return `${year}-${MonthMap[monthName]}-${day}T00:00:00.000+10:00`
+function makeDateString(day: string, monthName: string, year: string | number): string {
+  let yyyy_mm_dd = `${year}-${MonthMap[monthName]}-${day}`
+  return moment_timezone.default(yyyy_mm_dd, 'YYYY-MM-DD', TIME_ZONE).toISOString(true)
+}
+
+function getMonthNumberIso(date: string): number {
+  return parseInt(moment(date).format('MM'), 10)
+}
+
+function getMonthNumber(day: string, monthName: string, year: string | number): number {
+  return getMonthNumberIso(makeDateString(day, monthName, year))
 }
 
 function stringToMoney(moneyStringWithCrDb: string): Money {

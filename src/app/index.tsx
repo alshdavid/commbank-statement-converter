@@ -2,9 +2,9 @@ import "./index.scss";
 import { Button } from "../components/button";
 import { FilePicker } from "../components/file-picker";
 import { makeReactive } from "../platform/reactive";
-import { IStatementConverter } from "../platform/converter";
+import { IStatementConverter, StatementRecord } from "../platform/converter";
 import { BankLabel, BankType } from "./bank-type";
-import { h, Component } from "preact";
+import { h, Component, Fragment } from "preact";
 import { toCSV } from "../platform/serialize";
 import * as pdf from "../platform/pdf"
 import { downloadFile } from "../platform/browser";
@@ -12,6 +12,7 @@ import { INGAustraliaConverter } from "../banks/ing_au";
 import { CommBankAustraliaConverter } from "../banks/cba_au";
 import { ANZAustraliaConverter } from "../banks/anz_au";
 import { KiwiBankNewZealandConverter } from "../banks/kiwi_nz";
+import moment from "moment";
 
 export class App extends Component {
   parsers: Record<BankType, IStatementConverter>
@@ -20,6 +21,7 @@ export class App extends Component {
   isComplete: boolean
   files: File[]
   results: string
+  conversionResults: StatementRecord[]
   hasError: boolean
 
   constructor() {
@@ -28,6 +30,7 @@ export class App extends Component {
     this.isConverting = false
     this.isComplete = false
     this.results = ''
+    this.conversionResults = []
     this.hasError = false
     this.selectedBank = BankType.cba_au;
     this.parsers = {
@@ -38,7 +41,7 @@ export class App extends Component {
     }
 
     // Component automatically recalculates when these properties are updated
-    makeReactive(this, 'selectedBank', 'files', 'isConverting', 'results', 'hasError', 'isComplete')
+    makeReactive(this, 'selectedBank', 'files', 'isConverting', 'results', 'hasError', 'isComplete', 'conversionResults')
   }
 
   async convert() {
@@ -46,7 +49,8 @@ export class App extends Component {
     
     let parseResult = await pdf.parseFiles(this.files)
     if (parseResult.error) {
-      this.results = 'Unable to parse PDF file' + parseResult.error
+      this.results = this.formatError('Unable to parse PDF file', parseResult.error)
+      this.isConverting = false
       this.hasError = true
       this.isComplete = true
       return
@@ -54,7 +58,8 @@ export class App extends Component {
 
     let conversionResult = await this.parsers[this.selectedBank].convert(parseResult.value)
     if (conversionResult.error) {
-      this.results = 'unable to convert PDF file'
+      this.results = this.formatError('Unable to convert PDF file', conversionResult.error)
+      this.isConverting = false
       this.hasError = true
       this.isComplete = true
       return
@@ -62,19 +67,26 @@ export class App extends Component {
 
     let csvResult = toCSV(conversionResult.value)
     if (csvResult.error) {
-      this.results = 'unable to generate CSV'
+      this.results = this.formatError('unable to generate CSV', csvResult.error)
+      this.isConverting = false
       this.hasError = true
       this.isComplete = true
       return
     }
 
-    this.results = 'updated'
+    this.conversionResults = conversionResult.value
+    this.results = csvResult.value
     this.isConverting = false
     this.isComplete = true
   }
 
+  formatError(msg: string, error: Error): string {
+    return `${msg}\n\nPlease report this to alshdavid@gmail.com or raise an issue on Github\n\n${error.message}\n\n${error.stack}`
+  }
+
   reset() {
     this.files = []
+    this.conversionResults = []
     this.isConverting = false
     this.isComplete = false
     this.results = ''
@@ -87,20 +99,7 @@ export class App extends Component {
 
   render() {
     return (
-      <main class="page-home content-max-width">
-        <h1>Bank Statement Converter (PDF to CSV)</h1>
-        <p>
-          This site takes PDF bank statements and converts them to CSV or JSON
-          format
-        </p>
-        <p>
-          If you have questions, encounter bugs or want to request features, you
-          can raise them using the{" "}
-          <a target="_blank" href="https://github.com/alshdavid/commbank-statement-converter/issues">
-            bug reporter
-          </a>
-        </p>
-
+      <Fragment>
         <h3>Options</h3>
 
         <select onInput={(event) => (this.selectedBank = (event.target as any).value)}>
@@ -109,12 +108,14 @@ export class App extends Component {
           ))}
         </select>
 
+        <i>PDF files must be in their original form. Conversion will fail if they are images</i>
+
         <FilePicker
           value={this.files}
           onChange={files => this.files = files}
           multiple={true}
           accept="*.pdf"
-          disabled={this.isConverting || this.isComplete}
+          enabled={!this.isConverting && !this.isComplete}
           name="bank-statement-files" />
 
         <div className="submit">
@@ -135,11 +136,38 @@ export class App extends Component {
             color="green" 
             enabled={!this.isConverting && this.isComplete && !this.hasError}
             onClick={() => this.download()}
-            >Download</Button>
+            >Download CSV</Button>
         </div>
-      
-        {this.results && <div className="results-outlet"><div className="codeblock">{this.results}</div></div>}
-      </main>
+
+        {this.isComplete && this.hasError && <div className="results-outlet"><div className="codeblock">{this.results}</div></div>}
+
+        {this.isComplete && !this.hasError && this.conversionResults.length !== 0 && (
+          <div className='results-formatted'>
+            <table className='records'>
+              <tr>
+                <th>Account Number</th>
+                <th>Purchase Date</th>
+                <th>Settlement Date</th>
+                <th>Description</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th>Balance</th>
+              </tr>
+              {this.conversionResults.map(line => (
+                <tr>
+                  <td>{line.account_number}</td>
+                  <td>{moment(line.date_of_purchase).format('DD MMM YY')}</td>
+                  <td>{line.date_of_settlement && moment(line.date_of_settlement).format('DD MMM YY')}</td>
+                  <td>{line.description}</td>
+                  <td>{line.debit}</td>
+                  <td>{line.credit}</td>
+                  <td>{line.balance}</td>
+                </tr>))}
+            </table>
+        </div>)}
+
+        {/* {this.results && <div className="results-outlet"><div className="codeblock">{this.results}</div></div>} */}
+      </Fragment>
     );
   }
 }
