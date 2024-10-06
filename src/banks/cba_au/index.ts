@@ -30,9 +30,9 @@ export class CommBankAustraliaConverter implements IStatementConverter {
           date_of_purchase: transaction.date_of_purchase,
           date_of_settlement: transaction.date_of_settlement,
           description: transaction.description,
-          debit: transaction.debit ? `${transaction.debit[0]}.${transaction.debit[1]}` : '',
-          credit: transaction.credit ? `${transaction.credit[0]}.${transaction.credit[1]}` : '',
-          balance: `${transaction.balance[2] === 'DR' ? '-' : ''}${transaction.balance[0]}.${transaction.balance[1]}`,
+          debit: transaction.debit ? `${transaction.debit[0]}` : '',
+          credit: transaction.credit ? `${transaction.credit[0]}` : '',
+          balance: `${transaction.balance[1] === 'DR' ? '-' : ''}${transaction.balance[0]}`,
         }
         output.push(record)
       }
