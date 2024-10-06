@@ -180,7 +180,7 @@ function extractTransactionRows(segments: string[]): Array<Array<string>> {
     recordBuffer.push(seg)
 
     // Minimum length 3 to avoid ending on descriptions that end in CR or DR
-    if (seg.endsWith('CR') || seg.endsWith('DR') && recordBuffer.length > 3) {
+    if (seg.endsWith('CR') || seg.endsWith('DR') && recordBuffer.length >= 3) {
       records.push(recordBuffer)
       recordBuffer = []
       continue
