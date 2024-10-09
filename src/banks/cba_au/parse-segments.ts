@@ -4,7 +4,7 @@ import { TIME_ZONE } from "./constants"
 import moment from 'moment-timezone'
 import * as moment_timezone from 'moment-timezone'
 
-export type Money = [number, number, 'CR' | 'DR' | null]
+export type Money = [number, 'CR' | 'DR' | null]
 
 export type Statement = {
   openingDate: string
@@ -43,7 +43,7 @@ export class Record {
     this.description = record.description ?? ''
     this.debit = record.debit ?? null
     this.credit = record.credit ?? null
-    this.balance = record.balance ?? [0, 0, 'CR']
+    this.balance = record.balance ?? [0, 'CR']
   }
 }
 
@@ -180,7 +180,7 @@ function extractTransactionRows(segments: string[]): Array<Array<string>> {
     recordBuffer.push(seg)
 
     // Minimum length 3 to avoid ending on descriptions that end in CR or DR
-    if (seg.endsWith('CR') || seg.endsWith('DR') && recordBuffer.length > 3) {
+    if (seg.endsWith('CR') || seg.endsWith('DR') && recordBuffer.length >= 3) {
       records.push(recordBuffer)
       recordBuffer = []
       continue
@@ -217,12 +217,12 @@ function stringToMoney(moneyStringWithCrDb: string): Money {
     mode = 'CR'
   }
   const [moneyString] = moneyStringWithCrDbClean.split(' ')
-  const [dollars_str, cents_str] = moneyString.replaceAll(',', '').split('.')
+  const dollars_str = moneyString.replaceAll(',', '')
 
   if (mode) {
-    return [parseInt(dollars_str, 10), parseInt(cents_str, 10), mode]
+    return [parseFloat(dollars_str), mode]
   } else {
-    return [parseInt(dollars_str, 10), parseInt(cents_str, 10), null]
+    return [parseFloat(dollars_str), null]
   }
 }
 
