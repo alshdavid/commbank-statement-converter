@@ -1,7 +1,7 @@
 import './index.scss'
 import { Component, h } from 'preact'
-import { Button } from '../button'
-import { makeReactive } from '../../platform/reactive'
+import { Button } from '../button/index.js'
+import { makeReactive } from '../../platform/reactive/index.js'
 
 export type SelectProps = Omit<h.JSX.HTMLAttributes<HTMLInputElement>, 'onChange' | 'value' | 'disabled'> & {
   value?: File[]

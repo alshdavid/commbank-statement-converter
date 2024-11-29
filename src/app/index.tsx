@@ -1,18 +1,18 @@
 import "./index.scss";
-import { Button } from "../components/button";
-import { FilePicker } from "../components/file-picker";
-import { makeReactive } from "../platform/reactive";
-import { IStatementConverter, StatementRecord } from "../platform/converter";
-import { BankLabel, BankType } from "./bank-type";
 import { h, Component, Fragment } from "preact";
-import { toCSV } from "../platform/serialize";
-import * as pdf from "../platform/pdf"
-import { downloadFile } from "../platform/browser";
-import { INGAustraliaConverter } from "../banks/ing_au";
-import { CommBankAustraliaConverter } from "../banks/cba_au";
-import { ANZAustraliaConverter } from "../banks/anz_au";
-import { KiwiBankNewZealandConverter } from "../banks/kiwi_nz";
 import moment from "moment";
+import { Button } from "../components/button/index.js";
+import { FilePicker } from "../components/file-picker/index.js";
+import { makeReactive } from "../platform/reactive/index.js";
+import { IStatementConverter, StatementRecord } from "../platform/converter/index.js";
+import { BankLabel, BankType } from "./bank-type.js";
+import { toCSV } from "../platform/serialize/index.js";
+import * as pdf from "../platform/pdf/index.js";
+import { downloadFile } from "../platform/browser/index.js";
+import { INGAustraliaConverter } from "../banks/ing_au/index.js";
+import { CommBankAustraliaConverter } from "../banks/cba_au/index.js";
+import { ANZAustraliaConverter } from "../banks/anz_au/index.js";
+import { KiwiBankNewZealandConverter } from "../banks/kiwi_nz/index.js";
 
 export class App extends Component {
   parsers: Record<BankType, IStatementConverter>
@@ -171,136 +171,3 @@ export class App extends Component {
     );
   }
 }
-
-/*
- 
-export type FormData = {
-  'bank-statement-files': File[]
-  'separate-dates': boolean
-  'include-timezone': boolean
-  'exclude-account-balance': boolean
-  'output-format': 'csv' | 'json'
-}
-
- const [isConverting, setIsConverting] = useState(false)
-  const [result, setResult] = useState<string | undefined>(undefined)
-  const [hasError, setHasError] = useState<boolean>(false)
-
-  async function onSubmit(form: FormData) {
-    if (form['bank-statement-files'].length === 0) {
-      console.log("No files selected")
-      return
-    }
-    setIsConverting(true)
-    reset()
-
-    try {
-      const converted = await Commbank.convert(form['bank-statement-files'], {
-        excludeAccountBalance: form['exclude-account-balance'],
-        includeTimeZoneInDates: form['include-timezone'],
-        separateDates: form['separate-dates'],
-        outputFormat: form['output-format'],
-      })
-
-      setIsConverting(false)
-      setResult(converted)
-    } catch (untypedError: any) {
-      setHasError(true)
-      setResult(formatError(untypedError, form))
-      setIsConverting(false)
-    }
-  }
-
-  function generateErrorReportLink(to: 'github' | 'email'): string {
-    if (!result) return ''
-    const msgTitle = encodeURIComponent(`Commbank Converter Bug`)
-    const msgBody = encodeURIComponent('PASTE ERROR OUTPUT HERE')
-    if (to === 'email') {
-      return `mailto:alshdavid@gmail.com?subject=${msgTitle}&body=${msgBody}`
-    }
-    if (to === 'github') {
-      return `https://github.com/alshdavid/commbank-statement-converter/issues/new?title=${msgTitle}&body=${msgBody}`
-    }
-    return ''
-  }
-
-  function download(outputFormat: 'csv' | 'json') {
-    if (!result) return
-    downloadFile(`statements.${outputFormat}`, result)
-  }
-
-  function reset() {
-    setHasError(false)
-    setResult(undefined)
-  }
-
-
- <Form onSubmit={onSubmit} disabled={isConverting}>{(form) => <Fragment>
-        <FilePicker
-          multiple={true}
-          accept="*.pdf"
-          name="bank-statement-files" 
-          disabled={isConverting} />
-
-        <h3>Options</h3>
-
-        <Checkbox 
-          name="separate-dates" 
-          label="Separate authorization and settlement dates"
-          disabled={isConverting} />
-
-        <Checkbox 
-          name="include-timezone"
-          label="Include time zone in dates"
-          disabled={isConverting} />
-
-        <Checkbox 
-          name="exclude-account-balance" 
-          label="Exclude account balance column"
-          disabled={isConverting} />
-
-        <Select 
-          name="output-format"
-          label="Output Format"
-          disabled={isConverting}>
-          <Option value="csv">CSV</Option>
-          <Option value="json">JSON</Option>
-        </Select>
-
-        <div className="submit">
-          <Button 
-            color="blue" 
-            disabled={isConverting || form.get('bank-statement-files')?.length === 0} 
-            type="submit"
-            >Convert</Button>
-
-          <Button 
-            color="red" 
-            disabled={isConverting || !form.hasUpdated()} 
-            type="reset"
-            onClick={reset}
-            >Reset</Button>
-
-          {result && !hasError && 
-            <Button 
-              color="green" 
-              onClick={() => download(form.get('output-format'))}
-              >Download</Button>}
-          
-          {result && hasError && 
-            <a 
-              className="form-button yellow"
-              target="blank"
-              href={generateErrorReportLink('github')}
-              >Report Error via GitHub</a>}
-
-          {result && hasError && 
-            <a 
-              className="form-button yellow"
-              target="blank"
-              href={generateErrorReportLink('email')}
-              >Report Error via Email</a>}
-        </div>
-      </Fragment>}</Form>
-      {result && <div className="results-outlet"><div className="codeblock">{result}</div></div>}
- */

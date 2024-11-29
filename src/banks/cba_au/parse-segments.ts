@@ -1,8 +1,8 @@
-import { MonthMap } from "./dates"
-import { PAGE_BREAK } from "../../platform/pdf"
-import { TIME_ZONE } from "./constants"
 import moment from 'moment-timezone'
 import * as moment_timezone from 'moment-timezone'
+import { MonthMap } from "./dates.js"
+import { PAGE_BREAK } from "../../platform/pdf/index.js"
+import { TIME_ZONE } from "./constants.js"
 
 export type Money = [number, 'CR' | 'DR' | null]
 

@@ -1,8 +1,8 @@
-import { IStatementConverter, StatementRecord } from "../../platform/converter"
-import { PDFFile } from "../../platform/pdf"
-import { Result } from "../../platform/shared"
-import { CURRENCY, SWIFT_CODE } from "./constants";
-import { Statement, parseSegments } from "./parse-segments";
+import { IStatementConverter, StatementRecord } from "../../platform/converter/index.js"
+import { PDFFile } from "../../platform/pdf/index.js"
+import { Result } from "../../platform/shared/index.js"
+import { CURRENCY, SWIFT_CODE } from "./constants.js";
+import { Statement, parseSegments } from "./parse-segments.js";
 
 export class CommBankAustraliaConverter implements IStatementConverter {
   async convert(pdfFiles: PDFFile[]): Promise<Result<StatementRecord[], Error>> {

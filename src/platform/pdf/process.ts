@@ -1,5 +1,5 @@
-import { getPdfJsLib } from '../../vendor/pdfjs'
-import { streamAsyncIterator } from '../browser'
+import { getPdfJsLib } from './vendor.js'
+import { streamAsyncIterator } from '../browser/index.js'
 
 /**
  * @description A single PDF page broken down into string segments determined
@@ -13,7 +13,8 @@ export type PDFPageInSegments = Array<string>
 export const PAGE_BREAK = '--__PAGE_BREAK__--'
 
 export async function process(bytes: ArrayBuffer): Promise<PDFPageInSegments[]> {
-  const pdfDocument = await (await getPdfJsLib()).getDocument(bytes).promise
+  const pdfjs = await getPdfJsLib();
+  const pdfDocument = await pdfjs.getDocument(bytes).promise
 
   const pages: PDFPageInSegments[] = []
 

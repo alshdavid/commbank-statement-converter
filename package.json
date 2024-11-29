@@ -1,35 +1,42 @@
 {
   "name": "@alshdavid/statement-converter",
+  "type": "module",
   "scripts": {
-    "build": "npm run build:production",
-    "build:development": "npx webpack --mode development",
-    "build:production": "npx webpack --mode production",
-    "serve": "npx http-server -c=-1 ./dist",
-    "watch": "npm run watch:development",
-    "watch:development": "npx webpack --watch --mode development",
-    "watch:production": "npx webpack --watch --mode production"
+    "build": "node --import tsx ./build.ts",
+    "watch": "npx nodemon",
+    "serve": "http-server-rs --spa --watch ./dist"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "^11.0.0",
-    "css-loader": "^6.8.1",
-    "html-webpack-plugin": "^5.5.3",
-    "http-server": "^14.1.1",
-    "mini-css-extract-plugin": "^2.7.6",
-    "sass": "^1.69.5",
-    "sass-loader": "^13.3.2",
-    "style-loader": "^3.3.3",
-    "ts-loader": "^9.5.0",
-    "typescript": "^5.2.2",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "@types/node": "*",
+    "ejs": "*",
+    "typescript": "*",
+    "sass": "*",
+    "esbuild-sass-plugin": "*",
+    "esbuild": "*",
+    "prettier": "*",
+    "nodemon": "*",
+    "tsx": "*"
   },
   "dependencies": {
-    "@json2csv/plainjs": "^7.0.3",
-    "date-fns": "^2.30.0",
-    "date-fns-tz": "^2.0.0",
-    "moment": "^2.29.4",
-    "moment-timezone": "^0.5.43",
-    "pdfjs-dist": "^3.11.174",
-    "preact": "^10.18.1"
+    "@json2csv/plainjs": "*",
+    "moment": "*",
+    "moment-timezone": "*",
+    "pdfjs-dist": "*",
+    "preact": "*",
+    "papaparse": "*"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/node_modules/**",
+      "**/.git/**",
+      "**/dist/**"
+    ],
+    "watch": [
+      "src/**/*"
+    ],
+    "ext": "*",
+    "delay": 250,
+    "signal": "SIGTERM",
+    "exec": "npm run build"
   }
 }

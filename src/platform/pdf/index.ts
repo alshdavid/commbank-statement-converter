@@ -1,1 +1,2 @@
-export * from './from-file'
+export * from './from-file.js'
+export * from './vendor.js'

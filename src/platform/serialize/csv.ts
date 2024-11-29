@@ -1,5 +1,5 @@
 import { Parser } from "@json2csv/plainjs";
-import { Result } from "../shared";
+import { Result } from "../shared/index.js";
 
 export function toCSV(data: any): Result<string, Error> {
   try {

@@ -1,10 +1,12 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+
 # builds
 dist/
 build/
 publish/
 temp/
+
 
 # dependencies
 node_modules/
@@ -71,3 +73,5 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+!src/vendor/**/*

@@ -2,6 +2,8 @@ import './index.scss'
 import { h } from 'preact'
 
 export type ButtonProps = h.JSX.HTMLAttributes<HTMLButtonElement> & {
+  type?: string,
+  disabled?: boolean,
   color?: 'red' | 'blue' | 'grey' | 'green' | 'yellow'
   enabled?: boolean
 }

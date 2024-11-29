@@ -1,8 +1,8 @@
-@import './styles/mixins';
+@use './styles/mixins';
 
-@import './styles/var-colors';
-@import './styles/var-spacing';
-@import './styles/var-fonts';
+@use './styles/var-colors';
+@use './styles/var-spacing';
+@use './styles/var-fonts';
 
-@import './styles/common';
-@import './styles/typography';
+@use './styles/common';
+@use './styles/typography';
