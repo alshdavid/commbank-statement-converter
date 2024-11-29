@@ -1,5 +1,5 @@
-import { PDFFile } from "../pdf"
-import { Result } from "../shared"
+import { PDFFile } from "../pdf/index.js"
+import { Result } from "../shared/index.js"
 
 export interface IStatementConverter {
   convert(pdfFiles: PDFFile[]): Promise<Result<StatementRecord[], Error>> 
