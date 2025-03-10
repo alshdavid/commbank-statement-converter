@@ -1,6 +1,6 @@
-import { getBytesFromFile } from "../browser";
-import { Result } from "../shared";
-import { process } from "./process";
+import { getBytesFromFile } from "../browser/index.js";
+import { Result } from "../shared/index.js";
+import { process } from "./process.js";
 
 export const PAGE_BREAK = '--__PAGE_BREAK__--'
 

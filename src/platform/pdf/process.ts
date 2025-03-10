@@ -12,7 +12,7 @@ export type PDFPageInSegments = Array<string>
 
 export const PAGE_BREAK = '--__PAGE_BREAK__--'
 
-export async function process(bytes: ArrayBuffer): Promise<PDFPageInSegments[]> {
+export async function process(bytes: Uint8Array): Promise<PDFPageInSegments[]> {
   const pdfjs = await getPdfJsLib();
   const pdfDocument = await pdfjs.getDocument(bytes).promise
 

@@ -30,6 +30,7 @@ export class INGAustraliaConverter implements IStatementConverter {
     return { value: results }
   }
 
+  // Walk lines to find account details
   async getAccountDetails(lines: string[]): Promise<string> {
     // Debugging
     // for (let i = 0; i < lines.length; i += 1) {
@@ -54,7 +55,30 @@ export class INGAustraliaConverter implements IStatementConverter {
     return ''
   }
 
+  // Walk lines to find transactions
   async getTransactions(lines: string[], account_number: string): Promise<StatementRecord[]> {
+    /*
+      Transaction Example
+      [
+        "31/01/2021",                           // Date
+        "",                                     // Break
+        "-24.95",                               // Amount
+        "",                                     // Break
+        "284.86",                               // Balance
+        "Visa Purchase - Receipt 000000",       // Description (n)
+        "SOMETHING SOMETHING",                  // Description (n)
+        "Date 29/01/21 Card 0000",              // Description (n)
+      ]
+
+      Page end
+      [
+        "Page 2 of 5"
+      ]
+      [
+        "Total xxx"
+      ]
+    */
+
     let inTransactions = false
     let records: StatementRecord[] = []
     
@@ -64,14 +88,15 @@ export class INGAustraliaConverter implements IStatementConverter {
     // }
 
     for (let i = 0; i < lines.length; i += 1) {
-      function cursor(p: number): string {
-        if ((i + p) >= lines.length) {
+      function cursor(offset: number): string {
+        if ((i + offset) >= lines.length) {
           return ''
         }
-        return lines[i + p]
+        return lines[i + offset]
       }
 
-      // Look for header of transaction table
+      // Look for header of transaction table to tell us
+      // if we should start parsing the transactions.
       if (
         !inTransactions &&
         cursor(0) === "Date" &&
@@ -90,18 +115,7 @@ export class INGAustraliaConverter implements IStatementConverter {
       }
 
       // If the first line is not a date then we have finished the page
-      if (
-        !cursor(0)!.startsWith('0') &&
-        !cursor(0)!.startsWith('1') &&
-        !cursor(0)!.startsWith('2') &&
-        !cursor(0)!.startsWith('3') &&
-        !cursor(0)!.startsWith('4') &&
-        !cursor(0)!.startsWith('5') &&
-        !cursor(0)!.startsWith('6') &&
-        !cursor(0)!.startsWith('7') &&
-        !cursor(0)!.startsWith('8') &&
-        !cursor(0)!.startsWith('9')
-      ) {
+      if (!isDate(cursor(0))) {
         break
       }
 
@@ -113,18 +127,22 @@ export class INGAustraliaConverter implements IStatementConverter {
       }
 
       // look ahead for description
+      // move the cursor forwards to extract date from lines
+      // ahead of this one. Stop if we enter the next transaction
+      // of if we are at the end of the page then advance the cursor
+      // to the start of the next transaction.
       const descriptionSegs: string[] = []
-      for (let j = 5; cursor(j) !== ''; j++) {
+      for (let j = 5; !isDate(cursor(j)) && !isPageEnd(cursor(j)); j++) {
         descriptionSegs.push(cursor(j))
       }
-      descriptionSegs.pop()
-      const description =  descriptionSegs.join(' ')
+      i += descriptionSegs.length + 4;
+      const description =  descriptionSegs.join(' ').trim()
 
-      // Parse the date
+      // Parse the date and convert to ISO
       const [dd, mm, yyyy] = cursor(0).split('/').map(v => v.trim())
       const date_of_settlement = `${yyyy}-${mm}-${dd}`
 
-      // Determine the date of purchase
+      // Extract the date of purchase if in description
       let date_of_purchase = date_of_settlement
       if (description.startsWith('Visa Purchase - ')) {
         const [dd, mm, yy] = description.substring(description.length - 19, description.length - 10).split('/').map(v => v.trim())
@@ -143,11 +161,34 @@ export class INGAustraliaConverter implements IStatementConverter {
         credit: isDebit ? '' : amount,
         balance: cursor(4),
       })
-
-      i += descriptionSegs.length + 4;
     }
 
-    // console.log(records)
     return records
   }
+}
+
+// "00/00/00" formated as "dd/mm/yyyy"
+function isDate(line: string) {
+  return (
+    line.length > 8 &&
+    line[2] === '/' &&
+    (
+      line[0] === '0' ||
+      line[0] === '1' ||
+      line[0] === '2' ||
+      line[0] === '3' ||
+      line[0] === '4' ||
+      line[0] === '5' ||
+      line[0] === '6' ||
+      line[0] === '7' ||
+      line[0] === '8' ||
+      line[0] === '9'
+    )
+  )
+}
+
+function isPageEnd(line: string) {
+  return (
+    line.startsWith("Page ") || line.startsWith("Total ")
+  )
 }
