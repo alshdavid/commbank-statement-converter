@@ -180,10 +180,18 @@ function extractTransactionRows(segments: string[]): Array<Array<string>> {
     recordBuffer.push(seg)
 
     // Minimum length 3 to avoid ending on descriptions that end in CR or DR
-    if (seg.endsWith('CR') || seg.endsWith('DR') && recordBuffer.length >= 3) {
-      records.push(recordBuffer)
-      recordBuffer = []
-      continue
+    // for a new account, the opening balance is 'Nil'
+    // for a transaction withdraws all money in account,the balance is '$0.00' without CR or DR
+    if (
+      (seg.endsWith("CR") ||
+        seg.endsWith("DR") ||
+        seg.endsWith("Nil") ||
+        seg.endsWith("$0.00")) &&
+      recordBuffer.length >= 3
+    ) {
+      records.push(recordBuffer);
+      recordBuffer = [];
+      continue;
     }
   }
   return records
@@ -208,6 +216,7 @@ function getMonthNumber(day: string, monthName: string, year: string | number): 
 }
 
 function stringToMoney(moneyStringWithCrDb: string): Money {
+  if (moneyStringWithCrDb.endsWith("Nil")) return [0.0, null];
   let mode: 'DR'|'CR'| undefined = undefined
   const moneyStringWithCrDbClean = moneyStringWithCrDb.replaceAll('$', '').trim()
   if (moneyStringWithCrDbClean.endsWith('DR')) {
@@ -228,7 +237,7 @@ function stringToMoney(moneyStringWithCrDb: string): Money {
 
 /**
  * @description Parse opening rows that contain a non-standard number of segments
- * @throws {Error} For row lengths that don't match known options 
+ * @throws {Error} For row lengths that don't match known options
  */
 function parseOpeningRow(row: string[]): string[] {
   if (row.length === 3) {
