@@ -120,10 +120,12 @@ export class INGAustraliaConverter implements IStatementConverter {
       }
 
       // Determine credit/debit amount
-      let amount = cursor(2)
-      const isDebit = amount.startsWith('-')
-      if (isDebit) {
-        amount = amount.replace('-', '')
+      let credit = ''
+      let debit = ''
+      if (cursor(2).startsWith('-')) {
+        debit = cursor(2).replace('-', '')
+      } else {
+        credit = cursor(2)
       }
 
       // look ahead for description
@@ -157,8 +159,8 @@ export class INGAustraliaConverter implements IStatementConverter {
         date_of_purchase,
         date_of_settlement,
         description,
-        debit: isDebit ? amount : '',
-        credit: isDebit ? '' : amount,
+        debit,
+        credit,
         balance: cursor(4),
       })
     }
