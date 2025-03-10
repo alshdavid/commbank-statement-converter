@@ -128,6 +128,10 @@ export class INGAustraliaConverter implements IStatementConverter {
         credit = cursor(2)
       }
 
+      // Parse the date and convert to ISO
+      const [dd, mm, yyyy] = cursor(0).split('/').map(v => v.trim())
+      const date_of_settlement = `${yyyy}-${mm}-${dd}`
+
       // look ahead for description
       // move the cursor forwards to extract date from lines
       // ahead of this one. Stop if we enter the next transaction
@@ -139,10 +143,6 @@ export class INGAustraliaConverter implements IStatementConverter {
       }
       i += descriptionSegs.length + 4;
       const description =  descriptionSegs.join(' ').trim()
-
-      // Parse the date and convert to ISO
-      const [dd, mm, yyyy] = cursor(0).split('/').map(v => v.trim())
-      const date_of_settlement = `${yyyy}-${mm}-${dd}`
 
       // Extract the date of purchase if in description
       let date_of_purchase = date_of_settlement
