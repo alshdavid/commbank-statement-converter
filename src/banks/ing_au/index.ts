@@ -132,6 +132,9 @@ export class INGAustraliaConverter implements IStatementConverter {
       const [dd, mm, yyyy] = cursor(0).split('/').map(v => v.trim())
       const date_of_settlement = `${yyyy}-${mm}-${dd}`
 
+      // Get balance
+      const balance = cursor(4)
+
       // look ahead for description
       // move the cursor forwards to extract date from lines
       // ahead of this one. Stop if we enter the next transaction
@@ -161,7 +164,7 @@ export class INGAustraliaConverter implements IStatementConverter {
         description,
         debit,
         credit,
-        balance: cursor(4),
+        balance,
       })
     }
 
